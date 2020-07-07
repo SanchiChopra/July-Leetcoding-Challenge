@@ -19,24 +19,38 @@ Output: 16
 
 class Solution {
 public:
-    int islandPerimeter(vector<vector<int>>& grid) {
-        if(grid.empty())    return 0;
-        int m = grid.size(), n = grid[0].size(), peri = 0;
+    vector<vector<int> > g;
+    int n,m;
+    int ans=0;
+    
+    void dfs(int x,int y){
         
-        auto borderLines = [&](int i, int j) -> int {
-            int cnt = 0;
-            if(i-1 < 0 || grid[i-1][j] == 0)    cnt++;
-            if(j+1 >= n || grid[i][j+1] == 0)   cnt++;
-            if(i+1 >= m || grid[i+1][j] == 0)   cnt++;
-            if(j-1 < 0 || grid[i][j-1] == 0)    cnt++;
-            return cnt;
-        };
-        
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(grid[i][j] == 1)    peri += borderLines(i, j);
-            }
+        if(x<0 || y<0 || x>=n || y>=m || g[x][y]==0){
+            ans++;
+            return;
         }
-        return peri;
+        
+        if(g[x][y]==-1) return ;
+        
+        g[x][y]=-1;
+        dfs(x+1,y);
+        dfs(x-1,y);
+        dfs(x,y+1);
+        dfs(x,y-1);
+    }
+    
+    void traverse(){
+         for(int i=0;i<n;i++) for(int j=0;j<m;j++) if(g[i][j]){
+            dfs(i,j);
+            return;
+        } 
+    }
+    int islandPerimeter(vector<vector<int>>& grid) {
+        n=grid.size();
+        m=grid[0].size();
+        g=grid;
+        traverse();
+        return ans;
+       
     }
 };
